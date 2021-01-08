@@ -11,16 +11,21 @@ import os
 os.chdir(elmonk_basepath)
 
 from elmonk.common import HdfLaser
-
+#This is an HdfLaser object
+#If you ask for .info, you get a pandas dataframe
+#It appears to be of shape (8185, 10)
+#It has the following columns:
+#'run', 'seq', 'fill', 'bfield', 'temperature', 'good', 't1', 'date', 'iov_idx', 'hdf_name'
 data = HdfLaser('/panfs/roc/groups/4/rusack/evans908/FAIR/ECAL_RADDAM_Data/2016/dst.w447.hdf5')
 print(data.info.columns)
 
 from ecalic import geom
 
+#This returns an index (int64) with 1700 entries (I'm guessing these are all of the crystals that are part of FED 636
 xtals = data.xtal_idx('FED == 636')
-
+#This is a pandas dataframe with two columns (iov_idx and POSIX paths to iovs) in my case, they are all just paths to the same file. If your data was across multiple files, I guess this would tell the program where to find them.
 iovs = data.iov_idx(['2016-08-01','2016-08-10'])
-
+#This is also a pandas dataframe, it has a column for each crystal in the FED (1700) and then it has rows for each time there was laser data taken in the data range I specified. It looks like there are 344 rows.
 histories = data.xtal_history(iov_idx=iovs,xtal_idx=xtals)
 
 import numpy as np
