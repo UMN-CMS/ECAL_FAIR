@@ -8,7 +8,10 @@ def dfSlicesFromDS(xtals_ds, xtals_idxs=None):
         np_slice = xtals_ds[:,:]
     else:
         np_slice = xtals_ds[:,xtals_idxs]
+    slice_df = pd.DataFrame(data=np_slice)
+
     return pd.DataFrame(data=np_slice) 
+   
 
 def pullIOVtoDF(filename, corrections, xtals_idxs=None):
     #read in iov file
@@ -18,9 +21,13 @@ def pullIOVtoDF(filename, corrections, xtals_idxs=None):
     
     xtals_grp = hd_file['crystals']
     
-    correction_dfs = {}
+   # correction_dfs = {}
+    correction_dfs = []
     #get correction dataframes
     for correction in corrections:
-         correction_dfs[correction] = dfSlicesFromDS(xtals_grp[correction], xtals_idxs)
-
-    return correction_dfs
+         #correction_dfs[correction] = dfSlicesFromDS(xtals_grp[correction], xtals_idxs)
+         correction_dfs.append(dfSlicesFromDS(xtals_grp[correction], xtals_idxs))
+    corr_df = pd.concat(correction_dfs, axis=1)
+    #we want to rename the columns
+    corr_df.columns = corrections
+    return corr_df
