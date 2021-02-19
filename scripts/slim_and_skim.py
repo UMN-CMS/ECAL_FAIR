@@ -52,6 +52,9 @@ def pullSlimAndSkim(dst_file, oms_file, out_file=None):
     
     #quick rename
     slim_df = slim_df.rename(columns={'date_x':'datetime'})
+
+    #make cumulative inst_lumi column
+    slim_df['int_inst_lumi'] = slim_df.inst_lumi.fillna(0.0).cumsum()
     
     #write it out or return the dataframe
     if not (out_file==None):

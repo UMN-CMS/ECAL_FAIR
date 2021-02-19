@@ -27,8 +27,16 @@ def load_year(year, folder='/home/rusack/evans908/FAIR/Lumi_Data', months=None):
     df.drop(columns=['index'], inplace=True)
     #set time index
     df = df.set_index('time')
+    #build two integrated columns    
+    make_integrated_lumi(df)
     return df
 
 def find_ls(laser_ts, bril_df): #find the lumi-section closest
     idx = bril_df.index.get_loc(laser_ts, method='nearest')
     return idx 
+
+def make_integrated_lumi(df):
+    df['int_deliv_inv_ub'] = df['delivered(/ub)'].cumsum()
+    df['int_record_inv_ub'] = df['recorded(/ub)'].cumsum()
+
+
