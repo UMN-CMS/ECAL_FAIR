@@ -1,3 +1,50 @@
+import os
+import re
+import sys
+import zipfile
+from collections import UserDict
+
+import numpy as np
+import pandas as pd
+import requests
+
+#utilities made by me##############################################################
+
+
+def scale_shrinker(pd_series, floor, take_log=True, calc=True):
+    """
+    Takes in a pandas series of positive numbers. 
+    It truncates data below a chosen order of magnitude (wrt the max) to 0.0
+    and optionally takes the log10 of the remaining data
+    If calc = True, it calculates the floor as an order of magnitude below the max
+    otherwise, it just takes the floor value given as the floor
+    """
+    def cutfloor(x, floor):
+        '''return value if x > floor, return 0.0 otherwise'''
+        if x > floor:
+            return x
+        else:
+            return 0.0
+    #we don't want to touch the original series
+    new_series = pd_series.copy()
+    #calculate floor if requested
+    if(calc):
+        floor = 10.0 ** (-1.0 * float(floor))
+        max_val = pd_series.max()
+        floor = max_val * floor
+        if(take_log):
+            floor = np.log10(floor)
+
+    #log space
+    if(take_log):
+        new_series = new_series.apply(np.log10)
+    
+    #or just drop values
+    new_series = new_series.apply(lambda x: cutfloor(x, floor))
+    
+    return new_series, floor
+    
+#############################################################################################################
 #MIT License
 #
 #Copyright (c) 2020 Francesca Lazzeri
@@ -14,15 +61,6 @@
 #
 #THE FOLLOWING UTILITIES COME FROM F. Lazzeri @ https://github.com/FrancescaLazzeri/Machine-Learning-for-Time-Series-Forecasting
 #
-import os
-import re
-import sys
-import zipfile
-from collections import UserDict
-
-import numpy as np
-import pandas as pd
-import requests
 
 def mape(predictions, actuals):
     """Mean absolute percentage error"""
