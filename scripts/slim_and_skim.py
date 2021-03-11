@@ -6,7 +6,7 @@ import os
 
 from elmonk.common import HdfLaser
 
-def pullSlimAndSkim(dst_file, oms_file, out_file=None):
+def pullSlimAndSkim(dst_file, oms_file, out_file=None, slim=True):
     #This is an HdfLaser object, it also loads lumi info from the oms file
     data = HdfLaser(dst_file, hdf_run_info=oms_file)
     data.add_inst_lumi_info()
@@ -47,9 +47,14 @@ def pullSlimAndSkim(dst_file, oms_file, out_file=None):
     full_df = pd.merge(lumi_df, iov_df, on='iov_idx')
     
     #just grab some of the interesting columns
+    wanted_columns = ['iov_idx','date_x','calibration','inst_lumi']
+    if(slim == True): 
+        print('only taking colums: ')
+        print(wanted_columns)
+        slim_df = full_df.loc[:, wanted_columns]
     
-    slim_df = full_df.loc[:, ['iov_idx','date_x','calibration','inst_lumi']]
-    
+    else:
+        slim_df = full_df
     #quick rename
     slim_df = slim_df.rename(columns={'date_x':'datetime'})
 
