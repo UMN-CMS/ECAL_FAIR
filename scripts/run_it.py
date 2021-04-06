@@ -5,7 +5,7 @@ import pandas as pd
 dst_dfs, xtals = dfb.pullSlimAndSkim('../ECAL_RADDAM_Data/2018/dst.w447.hdf5',
                                      '../ECAL_RADDAM_Data/2018/oms.hdf5', 
                                      out_file=None, 
-                                     slim=True, 
+                                     slim=False, 
                                      max_xtals=10)
 #load lumi_information
 print('Loading lumi by month: ')

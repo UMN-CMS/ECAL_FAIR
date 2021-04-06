@@ -105,6 +105,7 @@ def pullSlimAndSkim(dst_file, oms_file, out_file=None, slim=True, max_xtals=2):
         slim_df = slim_df.rename(columns={fedId:'laser_datetime'})
 
         #make cumulative inst_lumi column
+        print(slim_df.columns)
         slim_df['int_inst_lumi'] = slim_df.inst_lumi.fillna(0.0).cumsum()
 
         slim_df_list.append(slim_df)
