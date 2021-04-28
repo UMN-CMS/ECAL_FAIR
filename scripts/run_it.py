@@ -6,7 +6,7 @@ dst_dfs, xtals = dfb.pullSlimAndSkim('../ECAL_RADDAM_Data/2018/dst.w447.hdf5',
                                      '../ECAL_RADDAM_Data/2018/oms.hdf5', 
                                      out_file=None, 
                                      slim=False, 
-                                     max_xtals=10)
+                                     max_xtals=10000)
 #load lumi_information
 print('Loading lumi by month: ')
 lumi_df = dfb.load_year('18') 
@@ -23,4 +23,4 @@ print('building final df')
 #now we concatenate the dfs
 final_df = pd.concat(comb_dfs, keys=xtals, axis=0)
 #save it out
-final_df.to_csv('slimmed_df.csv', index=True)
+final_df.to_csv('slimmed_df_LME38.csv', index=True)
