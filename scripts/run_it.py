@@ -23,4 +23,4 @@ print('building final df')
 #now we concatenate the dfs
 final_df = pd.concat(comb_dfs, keys=xtals, axis=0)
 #save it out
-final_df.to_csv('slimmed_df_LME38.csv', index=True)
+final_df.to_csv('slimmed_df_LME38_PNA4.csv', index=True)

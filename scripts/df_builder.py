@@ -47,7 +47,7 @@ def pullSlimAndSkim(dst_file, oms_file, out_file=None, slim=True, max_xtals=2):
     
     #this grabs the text string and uses it as a pandas dataframe query since geom is literally an emap as a pandas.dataframe. It has many columns, including FED... and eta.
     print('Grabbing Crystal Indices')
-    xtals = data.xtal_idx('(eta_module == 4) & (phi_module == 1)')
+    xtals = data.xtal_idx('(eta_module == 4) & (phi_module == 1) & (LME == 38) & (PNA == 4)')
     #This is a pandas dataframe with two columns (iov_idx and POSIX paths to iovs) in my case, they are all just paths to the same file. If your data was across multiple files, I guess this would tell the program where to find them.
     print('Grabbing IOV histories')
     iovs = data.iov_idx() #this just gets all of them
