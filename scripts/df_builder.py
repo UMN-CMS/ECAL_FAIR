@@ -19,7 +19,7 @@ def dfSlicesFromDS(xtals_ds, xtals_idxs=None):
 
 def pullIOVtoDF(filename, corrections, xtals_idxs=None):
     #read in iov file
-    hd_file = h5py.File('../ECAL_RADDAM_Data/2018/iov.w447.hdf5', 'r')
+    hd_file = h5py.File(filename, 'r')
     
     #get crystals group
     
@@ -36,7 +36,7 @@ def pullIOVtoDF(filename, corrections, xtals_idxs=None):
     corr_df.columns = corrections
     return corr_df
 
-def pullSlimAndSkim(dst_file, oms_file, out_file=None, slim=True, max_xtals=2):
+def pullSlimAndSkim(dst_file, oms_file, out_file=None, slim=True, max_xtals=2, xtal_sel='(eta_module == 4) & (phi_module == 1) & (LME == 38) & (PNA == 4)'):
     #This is an HdfLaser object, it also loads lumi info from the oms file
     data = HdfLaser(dst_file, hdf_run_info=oms_file, preload_fed=True)
     data.add_inst_lumi_info()
@@ -47,7 +47,7 @@ def pullSlimAndSkim(dst_file, oms_file, out_file=None, slim=True, max_xtals=2):
     
     #this grabs the text string and uses it as a pandas dataframe query since geom is literally an emap as a pandas.dataframe. It has many columns, including FED... and eta.
     print('Grabbing Crystal Indices')
-    xtals = data.xtal_idx('(eta_module == 4) & (phi_module == 1) & (LME == 38) & (PNA == 4)')
+    xtals = data.xtal_idx(xtal_sel)
     #This is a pandas dataframe with two columns (iov_idx and POSIX paths to iovs) in my case, they are all just paths to the same file. If your data was across multiple files, I guess this would tell the program where to find them.
     print('Grabbing IOV histories')
     iovs = data.iov_idx() #this just gets all of them
@@ -142,6 +142,7 @@ def load_year(year, folder='/home/rusack/evans908/FAIR/Lumi_Data', months=None):
     df = df.reset_index()
     df.drop(columns=['index'], inplace=True)
     #set time index
+    df['ls_time'] = df.time
     df = df.set_index('time')
     #build two integrated columns    
     make_integrated_lumi(df)
